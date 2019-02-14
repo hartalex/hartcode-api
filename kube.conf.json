@@ -39,14 +39,16 @@
             ],
             "livenessProbe": {
               "httpGet": {
-                "port": 8811
+                "port": 8811,
+                "path": "/info"
               },
               "initialDelaySeconds": 3,
               "periodSeconds": 3
             },
             "readinessProbe": {
               "httpGet": {
-                "port": 8811
+                "port": 8811,
+                "path": "/info"
               },
               "initialDelaySeconds": 3,
               "periodSeconds": 3
