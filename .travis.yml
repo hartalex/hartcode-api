@@ -1,0 +1,35 @@
+sudo: required
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
+    - node_modules
+language:
+  - node_js
+  - python
+python: 2.7
+stages:
+  - name: buildContainer
+    if: type IN (push, pull_request)
+  - name: releaseContainer
+    if: branch IN (test, prod, master) and type = push
+services:
+  - docker
+node_js:
+  - "11.9.0"
+before_install:
+  - ./scripts/setup.sh
+jobs:
+  include:
+    - stage: buildContainer
+      script:
+        - npm run lint
+        - ./scripts/buildContainer.sh
+    - stage: releaseContainer
+      script:
+        - ./scripts/releaseContainer.sh
+        - npm run cleanOldContainers
+notifications:
+  slack: hartcode:GqPCaLxnPqXfPJBMjJbEvG81
+addons:
+  code_climate:
+    repo_token: 3ce330712077306d18b2bfbee557dfa987d4fefc8862655b74642f9505fd6b0b
